@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker build -t catalogue:${appVersion} .
+                        docker build -t catalogue:1.0.0 .
                     '''
                 }
             }

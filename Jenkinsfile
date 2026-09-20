@@ -30,9 +30,11 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Running build step...'
+                script {
+                    sh 'npm install'
+                }
             }
         }
 

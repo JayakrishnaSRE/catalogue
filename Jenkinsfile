@@ -49,7 +49,7 @@ pipeline {
         }
         stage('Sonar Scan') {
             environment {
-                def scannerHome = tool 'sonar-8.0'
+                scannerHome = tool 'sonar-8.0'
             }
             steps {
                 script {
@@ -57,6 +57,7 @@ pipeline {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
+        }
         }
         stage('Quality Gate') {
             steps {

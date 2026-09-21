@@ -5,20 +5,23 @@ pipeline {
     environment {
         COUSRSE = "myapp"
         appVersion = "1.0.0"
+        PROJECT = "roboshop"
+        COMPONENT = "catalogue"
     }
     options {
         timeout(time: 10, unit: 'HOURS')
         disableConcurrentBuilds()
     }
 
-        parameters {
-        string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
-        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Toggle this value')
-        choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
-        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
-    }
+    //     parameters {
+    //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+    //     text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+    //     booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Toggle this value')
+    //     choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+    //     password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+    // }
 
+    // this is build section
     stages {
         stage('Read Version') {
             steps {
@@ -34,6 +37,34 @@ pipeline {
             steps {
                 script {
                     sh 'npm install'
+                }
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                script {
+                    sh 'npm test'
+                }
+            }
+        }
+        stage('Sonar Scan') {
+            environment {
+                def scannerHome = tool 'sonar-8.0'
+            }
+            steps {
+                script {
+                    withSonarQubeEnv('sonar-server') {
+                        sh 'sonar-scanner -Dsonar.projectKey=roboshop_catalogue -Dsonar.sources=. -Dsonar.host.url=http://
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                script {
+                    timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: true
+                    }
                 }
             }
         }

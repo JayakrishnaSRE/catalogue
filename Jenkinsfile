@@ -54,7 +54,6 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('sonar-server') {
-                        sh 'sonar-scanner -Dsonar.projectKey=roboshop_catalogue -Dsonar.sources=. -Dsonar.host.url=http://
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
